@@ -4,18 +4,18 @@ An asynchronous webfinger client for [node](http://nodejs.org/).  It returns an 
 
 ## Usage
 
-  var wf = new webfinger.WebFingerClient();
-  var userUri = "foo@example.com";
-  var fingerPromise = wf.finger(userUri);
-  fingerPromise.addCallback(function(xrdObj) {
-    // Do something with the user's xrd object
-  }
+    var wf = new webfinger.WebFingerClient();
+    var userUri = "foo@example.com";
+    var fingerPromise = wf.finger(userUri);
+    fingerPromise.addCallback(function(xrdObj) {
+      // Do something with the user's xrd object
+    }
 
 ## Example app
 
 From the top level directory of this project, run 
 
-  $ node webfinger.js <username>@gmail.com
+    $ node webfinger.js <username>@gmail.com
 
 and the application will output the latest google public Buzz entry from that user.
 
