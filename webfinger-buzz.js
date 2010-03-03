@@ -24,38 +24,37 @@ var userUri =   process.argv[2];
 sys.puts("fingering " + userUri);
 
 var wf = new webfinger.WebFingerClient();
-var fingerPromise = wf.finger(userUri);
-fingerPromise.addCallback(function(xrdObj) {
-  var statusLinks = xrdObj.getLinksByRel("http://schemas.google.com/g/2010#updates-from");
-  if (statusLinks.length < 1) {
-    sys.puts("No status information for " + userUri);
-  process.exit(0);
-  }
-  var statusUrl = url.parse(statusLinks[0].getAttrValues('href')[0]);
-  var httpClient = http.createClient(80, statusUrl.hostname);
-  var path = statusUrl.pathname;
-  if (statusUrl.search) {
-    path += statusUrl.search;
-  }
+wf.finger(userUri,
+  function(xrdObj) {
+    var statusLinks = xrdObj.getLinksByRel("http://schemas.google.com/g/2010#updates-from");
+    if (statusLinks.length < 1) {
+      sys.puts("No status information for " + userUri);
+      process.exit(0);
+    }
+    var statusUrl = url.parse(statusLinks[0].getAttrValues('href')[0]);
+    var httpClient = http.createClient(80, statusUrl.hostname);
+    var path = statusUrl.pathname;
+    if (statusUrl.search) {
+      path += statusUrl.search;
+    }
 
-  var request = httpClient.request("GET", path, {"host": statusUrl.hostname});
+    var request = httpClient.request("GET", path, {"host": statusUrl.hostname});
 
-  request.addListener('response', function (response) {
-    response.setBodyEncoding("utf8");
-    var body = "";
-    response.addListener("data", function (chunk) {
-      body += chunk;
-    });
-    response.addListener("end", function() {
-      var atomParser = new atom.AtomParser(false);
-      var atomPromise = atomParser.parse(body);
-      atomPromise.addCallback(function(atomFeed) {
-        sys.puts("Feed: " + atomFeed.title);
-        sys.puts(atomFeed.entries.length + " entries");
-        sys.puts("Updated: " + atomFeed.entries[0].updated);
-        sys.puts(atomFeed.entries[0].title + ": " + atomFeed.entries[0].summary);
+    request.addListener('response', function (response) {
+      response.setBodyEncoding("utf8");
+      var body = "";
+      response.addListener("data", function (chunk) {
+        body += chunk;
       });
+      response.addListener("end", function() {
+        var atomPromise = atom.parse(body,
+          function(atomFeed) {
+            sys.puts("Feed: " + atomFeed.title);
+            sys.puts(atomFeed.entries.length + " entries");
+            sys.puts("Updated: " + atomFeed.entries[0].updated);
+            sys.puts(atomFeed.entries[0].title + ": " + atomFeed.entries[0].summary);
+          });
+        });
     });
+    request.close();
   });
-  request.close();
-});
