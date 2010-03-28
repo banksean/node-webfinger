@@ -3,13 +3,13 @@
 An asynchronous webfinger client for [node](http://nodejs.org/).  It returns an [XRD](http://hueniverse.com/2009/11/xrd-alignment-with-link-syntax/) object, given an email address.
 
 ## Usage
-
     var wf = new webfinger.WebFingerClient();
-    var userUri = "foo@example.com";
-    var fingerPromise = wf.finger(userUri);
-    fingerPromise.addCallback(function(xrdObj) {
-      // Do something with the user's xrd object
-    }
+    wf.finger("foo@example.com",
+      function(xrdObj) {
+        var statusLinks = xrdObj.getLinksByRel("http://schemas.google.com/g/2010#updates-from");
+        // do something with statusLinks
+      }
+    );
 
 ## Example app
 
