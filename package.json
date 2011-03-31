@@ -1,0 +1,8 @@
+{ "name" : "webfinger"
+, "description": ""
+, "version": "0.0.1"
+, "dependencies": {
+  "sax": ""
+}
+, "engines" : {"node" : "~0.4.0"}
+}
