@@ -41,7 +41,7 @@ wf.finger(userUri,
     var request = httpClient.request("GET", path, {"host": statusUrl.hostname});
 
     request.addListener('response', function (response) {
-      response.setBodyEncoding("utf8");
+      response.setEncoding("utf8");
       var body = "";
       response.addListener("data", function (chunk) {
         body += chunk;
@@ -56,5 +56,5 @@ wf.finger(userUri,
           });
         });
     });
-    request.close();
+    request.end();
   });
