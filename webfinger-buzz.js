@@ -8,7 +8,7 @@ var sys = require('sys'),
  * A command line webfinger client.  Currently only works on
  * google Buzz updates, but could be tweaked to get differently
  * formatted updates from other services.
- * 
+ *
  * Example usage:
  *
  * $ node webfinger-buzz.js banksean@gmail.com
