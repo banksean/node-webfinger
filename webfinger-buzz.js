@@ -26,6 +26,7 @@ sys.puts("fingering " + userUri);
 var wf = new webfinger.WebFingerClient();
 wf.finger(userUri,
   function(err, xrdObj) {
+    if (err) return sys.puts(err);
     var statusLinks = xrdObj.getLinksByRel("http://schemas.google.com/g/2010#updates-from");
     if (statusLinks.length < 1) {
       sys.puts("No status information for " + userUri);
