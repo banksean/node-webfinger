@@ -32,15 +32,17 @@ wf.finger(userUri,
       process.exit(0);
     }
     var statusUrl = url.parse(statusLinks[0].getAttrValues('href')[0]);
-    var httpClient = http.createClient(80, statusUrl.hostname);
     var path = statusUrl.pathname;
     if (statusUrl.search) {
       path += statusUrl.search;
     }
-
-    var request = httpClient.request("GET", path, {"host": statusUrl.hostname});
-
-    request.addListener('response', function (response) {
+    var options = {
+      host: statusUrl.hostname,
+      port: 80,
+      path: path,
+      method: 'GET'
+    };
+    var request = http.request(options, function(response) {
       response.setEncoding("utf8");
       var body = "";
       response.addListener("data", function (chunk) {
