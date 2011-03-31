@@ -1,6 +1,7 @@
 { "name" : "webfinger"
 , "description": ""
 , "version": "0.0.1"
+, "main" : "./lib/webfinger-client.js"
 , "dependencies": {
   "sax": ""
 }
