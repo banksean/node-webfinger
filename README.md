@@ -19,6 +19,10 @@ From the top level directory of this project, run
 
 and the application will output the latest google public Buzz entry from that user.
 
+## Test
+
+    node tests/webfinger.js
+
 ## TODO
 
 Fix up the XRD and Atom parsers.  Currently doesn't work on Yahoo's XRD, for example.
