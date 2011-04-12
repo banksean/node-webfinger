@@ -28,13 +28,19 @@ var example = http.createServer(function(req, res) {
 })
 
 example.listen(8124, function() {
-    var todo = 2
+    var todo = 3
     var done = function() {if(--todo < 1) example.close()}
 
     var wf = new webfinger.WebFingerClient()
     // no finger uri
     wf.finger("someone@localhost:8124", function(err, xrdObj) {
         assert.equal(err, 404)
+        done()
+    })
+
+    // no dns
+    wf.finger("someone@plop", function(err, xrdObj) {
+        assert.ok(err, 404)
         done()
     })
 
