@@ -8,7 +8,7 @@ var sys = require('sys'),
  * A command line webfinger client.  Currently only works on
  * google Buzz updates, but could be tweaked to get differently
  * formatted updates from other services.
- * 
+ *
  * Example usage:
  *
  * $ node webfinger-buzz.js banksean@gmail.com
@@ -25,23 +25,26 @@ sys.puts("fingering " + userUri);
 
 var wf = new webfinger.WebFingerClient();
 wf.finger(userUri,
-  function(xrdObj) {
+  function(err, xrdObj) {
+    if (err) return sys.puts(err);
     var statusLinks = xrdObj.getLinksByRel("http://schemas.google.com/g/2010#updates-from");
     if (statusLinks.length < 1) {
       sys.puts("No status information for " + userUri);
       process.exit(0);
     }
     var statusUrl = url.parse(statusLinks[0].getAttrValues('href')[0]);
-    var httpClient = http.createClient(80, statusUrl.hostname);
     var path = statusUrl.pathname;
     if (statusUrl.search) {
       path += statusUrl.search;
     }
-
-    var request = httpClient.request("GET", path, {"host": statusUrl.hostname});
-
-    request.addListener('response', function (response) {
-      response.setBodyEncoding("utf8");
+    var options = {
+      host: statusUrl.hostname,
+      port: 80,
+      path: path,
+      method: 'GET'
+    };
+    var request = http.request(options, function(response) {
+      response.setEncoding("utf8");
       var body = "";
       response.addListener("data", function (chunk) {
         body += chunk;
@@ -56,5 +59,5 @@ wf.finger(userUri,
           });
         });
     });
-    request.close();
+    request.end();
   });
